@@ -12,9 +12,6 @@ export class Task {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'CASCADE' })
-  project: Project;
-
   @Column()
   title: string;
 
@@ -26,4 +23,7 @@ export class Task {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @ManyToOne(() => Project, (project) => project.tasks, { onDelete: 'CASCADE' })
+  project: Project;
 }
