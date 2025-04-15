@@ -11,6 +11,7 @@ A RESTful API built with NestJS and SQLite that allows users to create and manag
 - [API Endpoints](#api-endpoints)
 - [Example Usage](#example-usage)
 - [Postman Collection](#postman-collection)
+- [Run tests](#run-tests)
 - [Database](#database)
 
 ## Features
@@ -20,6 +21,7 @@ A RESTful API built with NestJS and SQLite that allows users to create and manag
 - Task status tracking
 - JWT-based authentication
 - User registration and login
+- Comprehensive unit tests
 - SQLite database for easy development setup
 
 ## Requirements
@@ -28,6 +30,40 @@ A RESTful API built with NestJS and SQLite that allows users to create and manag
 - yarn (v1.x or higher)
 
 ## Setup
+## Setup with Docker
+
+### Prerequisites
+- Docker and Docker Compose installed on your system
+
+### Quick Start
+1. Clone the repository
+2. Build the Docker Image
+```bash
+docker build -t project-mgmt-api .
+```
+3. Run the Docker Container
+```bash
+docker run -p 1000:1000 --env-file .env project-mgmt-api
+```
+The App will start running on http://localhost:{PORT}
+
+### Useful Commands
+- Stop the running container: `docker stop <container-id>`
+- Remove the running container: `docker rm <container-id>>`
+
+4. Or you can run the application with Docker Compose. Build the Image
+```bash
+docker-compose up --build
+```
+The App will start running on http://localhost:{PORT}
+
+### Useful Commands
+- Start the application: `docker-compose up -d`
+- Stop the application: `docker-compose down`
+- View logs: `docker-compose logs -f api`
+- Rebuild the image: `docker-compose build`
+
+## Setup locally
 
 ### 1. Clone the repository
 
@@ -210,6 +246,12 @@ A Postman collection is included to help with API testing. To use it:
 3. Click "Import" and select the collection file
 4. Adjust the variables as needed and ensure the value of the baseUrl matches with the PORT number specified
 5. Test the endpoints
+
+## Run Tests
+The project includes unit tests for the services and controllers. Ensure Jest is properly configured before running
+```bash
+yarn test
+```
 
 ## Database
 
