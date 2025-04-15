@@ -1,9 +1,13 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -37,6 +41,14 @@ export class AuthService {
 
   //creating a new user
   async createUser(userDto: Partial<User>) {
+    const existingUser = await this.userRepository.findOne({
+      where: { email: userDto.email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException('A user with this email already exists');
+    }
+
     const newUser = this.userRepository.create(userDto);
     return this.userRepository.save(newUser);
   }
