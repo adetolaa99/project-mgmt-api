@@ -23,6 +23,7 @@ describe('TasksService', () => {
             save: jest.fn(),
             findOne: jest.fn(),
             remove: jest.fn(),
+            merge: jest.fn(),
             createQueryBuilder: jest.fn().mockReturnValue({
               leftJoinAndSelect: jest.fn().mockReturnThis(),
               where: jest.fn().mockReturnThis(),
@@ -55,6 +56,14 @@ describe('TasksService', () => {
       due_date: new Date().toISOString(),
     };
 
+    const task = {
+      title: 'New Task',
+      due_date: new Date(),
+      is_completed: false,
+      created_at: new Date(),
+      project: { id: 1 } as Project,
+    } as Task;
+
     const savedTask: Task = {
       id: 1,
       title: 'New Task',
@@ -64,12 +73,20 @@ describe('TasksService', () => {
       project: { id: 1 } as Project,
     };
 
+    jest.spyOn(tasksRepository, 'create').mockReturnValue(task);
     jest.spyOn(tasksRepository, 'save').mockResolvedValue(savedTask);
 
     const result = await tasksService.create(1, createTaskDto);
     expect(result).toEqual(savedTask);
+
+    expect(tasksRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ...createTaskDto,
+        project: expect.any(Object),
+      }),
+    );
     expect(tasksRepository.save).toHaveBeenCalledWith(
-      expect.objectContaining(createTaskDto),
+      expect.objectContaining(task),
     );
   });
 

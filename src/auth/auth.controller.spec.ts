@@ -19,6 +19,7 @@ describe('AuthController', () => {
             validateUser: jest
               .fn()
               .mockResolvedValue({ access_token: 'mocked_token' }),
+            hashPassword: jest.fn().mockResolvedValue('hashed_password'),
           },
         },
       ],
@@ -37,7 +38,7 @@ describe('AuthController', () => {
 
     const result = await authController.register(registerDto);
     expect(result).toEqual({
-      message: 'Welcome, John Doe! Thank you for signing up.',
+      message: 'Welcome, John Doe! Thank you for signing up',
     });
     expect(authService.createUser).toHaveBeenCalledWith(
       expect.objectContaining({ email: 'john@example.com' }),

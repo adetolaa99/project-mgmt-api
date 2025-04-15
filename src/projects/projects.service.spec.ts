@@ -21,6 +21,15 @@ describe('ProjectsService', () => {
             findOne: jest.fn(),
             find: jest.fn(),
             delete: jest.fn(),
+            merge: jest.fn(),
+            remove: jest.fn(),
+            createQueryBuilder: jest.fn().mockReturnValue({
+              where: jest.fn().mockReturnThis(),
+              getCount: jest.fn().mockResolvedValue(0),
+              skip: jest.fn().mockReturnThis(),
+              take: jest.fn().mockReturnThis(),
+              getMany: jest.fn().mockResolvedValue([]),
+            }),
           },
         },
       ],
@@ -37,6 +46,14 @@ describe('ProjectsService', () => {
       name: 'New Project',
       description: 'Description',
     };
+
+    const project = {
+      name: 'New Project',
+      description: 'Description',
+      created_at: new Date(),
+      tasks: [],
+    } as Project;
+
     const savedProject: Project = {
       id: 1,
       name: 'New Project',
@@ -45,12 +62,14 @@ describe('ProjectsService', () => {
       tasks: [],
     };
 
+    jest.spyOn(projectsRepository, 'create').mockReturnValue(project);
     jest.spyOn(projectsRepository, 'save').mockResolvedValue(savedProject);
 
     const result = await projectsService.create(createProjectDto);
     expect(result).toEqual(savedProject);
+    expect(projectsRepository.create).toHaveBeenCalledWith(createProjectDto);
     expect(projectsRepository.save).toHaveBeenCalledWith(
-      expect.objectContaining(createProjectDto),
+      expect.objectContaining(project),
     );
   });
 
